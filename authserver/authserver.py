@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os.path
+import re
 import sqlite3
 
 from flask import Flask, request, render_template, g
@@ -83,6 +84,16 @@ def close_connection(exception):
         db = getattr(g, db_name, None)
         if db is not None:
             db.close()
+
+
+def identify_user_agent(user_agent):
+    for sugar_ua in re.findall(r'SugarLabs/[\d\.]+', user_agent):
+        platform = True
+        version = sugar_ua.split("/")[1]
+        break
+    else:
+        platform, version = False, None
+    return {'sugar_platform': platform, 'sugar_version': version}
 
 
 @app.route('/')
