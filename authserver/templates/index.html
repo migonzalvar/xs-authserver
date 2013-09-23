@@ -18,9 +18,16 @@
 
 <pre>
 ----
+# this request
 pkey_hash: {{ pkey_hash }}
 user_agent: {{ request.user_agent.string }}
 </pre>
 
+<pre>
+---
+# registered users
+{% for ru in registered_users %}
+- {{ ru }}
+{% endfor %}
 </body>
 </html>

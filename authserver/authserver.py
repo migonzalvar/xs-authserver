@@ -134,6 +134,7 @@ def index():
                 context.update(pkey_hash=pkey_hash)
                 context.update(user=User.get_by_pkey_hash(pkey_hash))
 
+    context['registered_users'] = Idmgr.all()
     return render_template("index.html", **context)
 
 
