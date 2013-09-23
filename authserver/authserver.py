@@ -98,15 +98,20 @@ def identify_user_agent(user_agent):
 
 @app.route('/')
 def index():
-    pkey_hash, user = None, None
+    context = dict(request=request)
+    context.update(identify_user_agent(request.user_agent.string))
+
+    context.update(pkey_hash=None, user=None)
     cookie = request.cookies.get('xoid')
     if cookie:
         xoid = json.loads(cookie)
         if xoid:
             pkey_hash = xoid.get('pkey_hash')
-    if pkey_hash:
-        user = User.get_by_pkey_hash(pkey_hash)
-    return render_template("index.html", name=pkey_hash, user=user)
+            if pkey_hash:
+                context.update(pkey_hash=pkey_hash)
+                context.update(user=User.get_by_pkey_hash(pkey_hash))
+
+    return render_template("index.html", **context)
 
 
 if __name__ == '__main__':

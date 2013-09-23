@@ -4,10 +4,23 @@
   <title>XS authentication server</title>
 </head>
 <body>
-{% if name %}
+{% if sugar_platform %}
+<p>Detected Sugar platform version {{ sugar_version }}</p>
+{% else %}
+<p>Not Sugar platform detected.</p>
+{% endif %}
+
+{% if user %}
   <h1>Hello {{ user }}!</h1>
 {% else %}
   <h1>Please login</h1>
 {% endif %}
+
+<pre>
+----
+pkey_hash: {{ pkey_hash }}
+user_agent: {{ request.user_agent.string }}
+</pre>
+
 </body>
 </html>
