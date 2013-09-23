@@ -18,7 +18,7 @@ def connect_to_database(database):
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = connect_to_database(DATABASE)
+        db = g._database = connect_to_database(app.config['DATABASE'])
         db.row_factory = sqlite3.Row
     return db
 
@@ -26,7 +26,7 @@ def get_db():
 def get_olpc_xs_db():
     db = getattr(g, '_olpc_xs_db', None)
     if db is None:
-        db = g._olpc_xs_db = connect_to_database(OLPC_XS_DB)
+        db = g._olpc_xs_db = connect_to_database(app.config['OLPC_XS_DB'])
         db.row_factory = sqlite3.Row
     return db
 
@@ -100,6 +100,7 @@ class User(object):
 app = Flask(__name__)
 app.debug = True
 
+app.config.from_object(__name__)
 
 @app.teardown_appcontext
 def close_connection(exception):
