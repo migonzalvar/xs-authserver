@@ -38,7 +38,7 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-class Idmgr:
+class Idmgr(object):
     """Laptops registered on idmagr.
 
     Correspond to a register in table ``laptop`` on idmgr database. The
@@ -57,12 +57,33 @@ class Idmgr:
             PRIMARY KEY (serial)
         );
     """
+    fields = ("serial", "nickname", "full_name", "pubkey")
 
+    @classmethod
+    def all(cls):
+        query = "SELECT {} FROM laptops".format(",".join(cls.fields))
+        cur = get_olpc_xs_db().execute(query)
+        rv = cur.fetchall()
+        cur.close()
+        return [cls(**dict(zip(r.keys(), r))) for r in rv]
+
+    def __init__(self, **kwargs):
+        self.values = {k: kwargs[k] for k in kwargs if k in self.fields}
+
+    def __getattr__(self, name):
+        if name in self.fields:
+            return self.values.get(name, None)
+        raise AttributeError("%r object has no attribute %r" %
+                             (self.__class__, name))
+
+    @property
     def pkey_hash(self):
         return hashlib.sha1(self.pubkey).hexdigest()
 
-    def get_by_pkey_hash(self):
-        return
+    def __repr__(self):
+        d = {'pkey_hash': self.pkey_hash}
+        d.update(self.values)
+        return repr(d)
 
 
 class User(object):
