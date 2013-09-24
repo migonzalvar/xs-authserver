@@ -96,6 +96,20 @@ class User(object):
         cur.close()
         return rv[0] if rv else None
 
+    def __init__(self, username, pkey_hash):
+        self.username = username
+        self.pkey_hash = pkey_hash
+
+    def save(self):
+        pass
+
+
+
+def sync_idmgr():
+    for i in Idmgr.all():
+        u = User(i.nickname, i.pkey_hash)
+        u.save()
+
 
 app = Flask(__name__)
 app.debug = True
