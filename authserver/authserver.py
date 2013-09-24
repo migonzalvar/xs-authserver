@@ -142,6 +142,7 @@ def index():
     context.update(pkey_hash=None, user=None)
     cookie = request.cookies.get('xoid')
     if cookie:
+        # TODO: secure reading cookie
         xoid = json.loads(cookie)
         if xoid:
             pkey_hash = xoid.get('pkey_hash')
