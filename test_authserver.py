@@ -97,6 +97,12 @@ class AuthserverTestCase(unittest.TestCase):
         assert "Hello {}".format(nickname) in rv.data
         assert "pkey_hash: {}".format(pkey_hash) in rv.data
 
+    def test_user_agent_sugar(self):
+        user_agent = r'SugarLabs/0.98'
+        headers = Headers({'User-Agent': user_agent})
+        rv = self.app.get('/', headers=headers)
+        assert "Detected Sugar platform" in rv.data
+
 
 if __name__ == '__main__':
     unittest.main()
