@@ -32,13 +32,6 @@ def get_olpc_xs_db():
     return db
 
 
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
-
-
 class Idmgr(object):
     """Laptops registered on idmgr.
 
