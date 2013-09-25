@@ -33,10 +33,14 @@ INSERT INTO "laptops" VALUES(
 """,
     'DATABASE': """
 CREATE TABLE users (
-    nickname,
-    pkey_hash
+    uuid VARCHAR(36) NOT NULL,
+    nickname VARCHAR(200) NOT NULL,
+    pkey_hash VARCHAR(40) NOT NULL,
+    PRIMARY KEY (uuid),
+    UNIQUE (pkey_hash)
 );
 INSERT INTO "users" VALUES(
+    '09c131b2-25dd-11e3-89c5-e89a8f08bf39',
     'fulano',
     'bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
 );

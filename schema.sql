@@ -1,4 +1,10 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE users (nickname, pkey_hash);
+CREATE TABLE users (
+    uuid VARCHAR(36) NOT NULL,
+    nickname VARCHAR(200) NOT NULL,
+    pkey_hash VARCHAR(40) NOT NULL,
+    PRIMARY KEY (uuid),
+    UNIQUE (pkey_hash)
+);
 COMMIT;

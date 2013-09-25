@@ -3,6 +3,7 @@ import json
 import os.path
 import re
 import sqlite3
+import uuid
 
 from flask import Flask, request, render_template, g
 
@@ -87,9 +88,23 @@ class Idmgr(object):
 
 
 class User(object):
+    """User registered in authserver custom database.
+
+    .. code:: sql
+
+        CREATE TABLE users (
+            uuid VARCHAR(36) NOT NULL,
+            nickname VARCHAR(200) NOT NULL,
+            pkey_hash VARCHAR(40) NOT NULL,
+            PRIMARY KEY (uuid),
+            UNIQUE (pkey_hash)
+        );
+
+    """
+
     @classmethod
     def _get_users_by_pkey_hash(cls, pkey_hash):
-        query = "SELECT nickname FROM users WHERE pkey_hash = ?"
+        query = "SELECT uuid FROM users WHERE pkey_hash = ?"
         args = (pkey_hash, )
         cur = get_db().execute(query, args)
         rv = cur.fetchall()
@@ -102,23 +117,53 @@ class User(object):
         if rv == []:
             sync_idmgr()
             rv = cls._get_users_by_pkey_hash(pkey_hash)
-        return rv[0] if rv else None
+        if rv:
+            return cls(uuid=rv[0]['uuid'])
+        else:
+            return None
 
-    def __init__(self, nickname, pkey_hash):
-        self.nickname = nickname
-        self.pkey_hash = pkey_hash
+    def __init__(self, **kwargs):
+        if 'uuid' in kwargs:
+            self.uuid = kwargs['uuid']
+            self._load()
+        else:
+            self.uuid = None
+            for field in kwargs:
+                if field in ('nickname', 'pkey_hash'):
+                    setattr(self, field, kwargs[field])
+
+    def _load(self):
+        query = "SELECT nickname, pkey_hash FROM users WHERE uuid = ?"
+        args = (self.uuid, )
+        cur = get_db().execute(query, args)
+        rv = cur.fetchall()
+        if rv:
+            self.nickname = rv[0]['nickname']
+            self.pkey_hash = rv[0]['pkey_hash']
+        else:
+            raise LookupError("User with UUID {uuid} not found".format(uuid=self.uuid))
 
     def save(self):
-        query = "INSERT INTO users VALUES (?, ?)"
-        args = (self.nickname, self.pkey_hash)
+        if self.uuid:
+            uuid_ = self.uuid
+            query = "REPLACE users VALUES (?, ?, ?)"
+        else:
+            uuid_ =  str(uuid.uuid4())
+            query = "INSERT INTO users VALUES (?, ?, ?)"
+        args = (uuid_, self.nickname, self.pkey_hash)
         get_db().execute(query, args)
+        self.uuid = uuid_
 
 
 def sync_idmgr():
     """Create new accounts from idmgr."""
     for i in Idmgr.all():
-        u = User(i.nickname, i.pkey_hash)
-        u.save()
+        u = User(nickname=i.nickname, pkey_hash=i.pkey_hash)
+        try:
+            u.save()
+        except sqlite3.IntegrityError:
+            # pkey_hash is not unique
+            pass
 
 
 app = Flask(__name__)
