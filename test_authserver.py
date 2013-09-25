@@ -8,6 +8,7 @@ from werkzeug.datastructures import Headers
 
 import authserver
 
+
 FIXTURES = {
     'OLPC_XS_DB': """
 CREATE TABLE "laptops" (

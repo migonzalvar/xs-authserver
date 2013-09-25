@@ -39,7 +39,7 @@ def query_db(query, args=(), one=False):
 
 
 class Idmgr(object):
-    """Laptops registered on idmagr.
+    """Laptops registered on idmgr.
 
     Correspond to a register in table ``laptop`` on idmgr database. The
     schema is defined as:
