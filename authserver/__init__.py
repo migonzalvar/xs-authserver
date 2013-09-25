@@ -88,12 +88,20 @@ class Idmgr(object):
 
 class User(object):
     @classmethod
-    def get_by_pkey_hash(self, pkey_hash):
+    def _get_users_by_pkey_hash(cls, pkey_hash):
         query = "SELECT username FROM users WHERE pkey_hash = ?"
         args = (pkey_hash, )
         cur = get_db().execute(query, args)
         rv = cur.fetchall()
         cur.close()
+        return rv
+
+    @classmethod
+    def by_pkey_hash(cls, pkey_hash):
+        rv = cls._get_users_by_pkey_hash(pkey_hash)
+        if rv == []:
+            sync_idmgr()
+            rv = cls._get_users_by_pkey_hash(pkey_hash)
         return rv[0] if rv else None
 
     def __init__(self, username, pkey_hash):
@@ -107,6 +115,7 @@ class User(object):
 
 
 def sync_idmgr():
+    """Create new accounts from idmgr."""
     for i in Idmgr.all():
         u = User(i.nickname, i.pkey_hash)
         u.save()
@@ -149,7 +158,7 @@ def index():
             pkey_hash = xoid.get('pkey_hash')
             if pkey_hash:
                 context.update(pkey_hash=pkey_hash)
-                context.update(user=User.get_by_pkey_hash(pkey_hash))
+                context.update(user=User.by_pkey_hash(pkey_hash))
 
     context['registered_users'] = Idmgr.all()
     return render_template("index.html", **context)
