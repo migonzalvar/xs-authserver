@@ -4,6 +4,7 @@
   <title>XS authentication server</title>
 </head>
 <body>
+
 {% if sugar_platform %}
 <p>Detected Sugar platform version {{ sugar_version }}</p>
 {% else %}
@@ -11,11 +12,12 @@
 {% endif %}
 
 {% if user %}
-  <h1>Hello {{ user }}!</h1>
+  <p>Hello {{ user.username }}!</p>
 {% else %}
-  <h1>Please login</h1>
+  <p>Please register your laptop</p>
 {% endif %}
 
+<h2>Log</h2>
 <pre>
 ----
 # this request
@@ -29,5 +31,6 @@ user_agent: {{ request.user_agent.string }}
 {% for ru in registered_users %}
 - {{ ru }}
 {% endfor %}
+
 </body>
 </html>
