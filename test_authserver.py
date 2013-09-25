@@ -33,7 +33,7 @@ INSERT INTO "laptops" VALUES(
 """,
     'DATABASE': """
 CREATE TABLE users (
-    username,
+    nickname,
     pkey_hash
 );
 INSERT INTO "users" VALUES(
@@ -78,19 +78,19 @@ class AuthserverTestCase(unittest.TestCase):
         assert "pkey_hash: None" in rv.data
 
     def test_registered_with_account(self):
-        username, pkey_hash = 'fulano','bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
+        nickname, pkey_hash = 'fulano','bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
         cookie = self.make_cookie(pkey_hash)
         headers = Headers({'Cookie': cookie})
         rv = self.app.get('/', headers=headers)
-        assert "Hello {}".format(username) in rv.data
+        assert "Hello {}".format(nickname) in rv.data
         assert "pkey_hash: {}".format(pkey_hash) in rv.data
 
     def test_registered_without_account(self):
-        username, pkey_hash = 'miguel', '195ed98f4975ebccb1e699d8636278b64e9276b3'
+        nickname, pkey_hash = 'miguel', '195ed98f4975ebccb1e699d8636278b64e9276b3'
         cookie = self.make_cookie(pkey_hash)
         headers = Headers({'Cookie': cookie})
         rv = self.app.get('/', headers=headers)
-        assert "Hello {}".format(username) in rv.data
+        assert "Hello {}".format(nickname) in rv.data
         assert "pkey_hash: {}".format(pkey_hash) in rv.data
 
 

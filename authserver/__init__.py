@@ -89,7 +89,7 @@ class Idmgr(object):
 class User(object):
     @classmethod
     def _get_users_by_pkey_hash(cls, pkey_hash):
-        query = "SELECT username FROM users WHERE pkey_hash = ?"
+        query = "SELECT nickname FROM users WHERE pkey_hash = ?"
         args = (pkey_hash, )
         cur = get_db().execute(query, args)
         rv = cur.fetchall()
@@ -104,13 +104,13 @@ class User(object):
             rv = cls._get_users_by_pkey_hash(pkey_hash)
         return rv[0] if rv else None
 
-    def __init__(self, username, pkey_hash):
-        self.username = username
+    def __init__(self, nickname, pkey_hash):
+        self.nickname = nickname
         self.pkey_hash = pkey_hash
 
     def save(self):
         query = "INSERT INTO users VALUES (?, ?)"
-        args = (self.username, self.pkey_hash)
+        args = (self.nickname, self.pkey_hash)
         get_db().execute(query, args)
 
 
