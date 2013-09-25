@@ -101,8 +101,9 @@ class User(object):
         self.pkey_hash = pkey_hash
 
     def save(self):
-        pass
-
+        query = "INSERT INTO users VALUES (?, ?)"
+        args = (self.username, self.pkey_hash)
+        get_db().execute(query, args)
 
 
 def sync_idmgr():
