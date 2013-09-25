@@ -141,7 +141,7 @@ class User(object):
             uuid_ = self.uuid
             query = "REPLACE users VALUES (?, ?, ?)"
         else:
-            uuid_ =  str(uuid.uuid4())
+            uuid_ = str(uuid.uuid4())
             query = "INSERT INTO users VALUES (?, ?, ?)"
         args = (uuid_, self.nickname, self.pkey_hash)
         get_db().execute(query, args)
@@ -163,6 +163,7 @@ app = Flask(__name__)
 app.debug = True
 
 app.config.from_object(__name__)
+
 
 @app.teardown_appcontext
 def close_connection(exception):

@@ -82,7 +82,7 @@ class AuthserverTestCase(unittest.TestCase):
         assert "pkey_hash: None" in rv.data
 
     def test_registered_with_account(self):
-        nickname, pkey_hash = 'fulano','bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
+        nickname, pkey_hash = 'fulano', 'bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
         cookie = self.make_cookie(pkey_hash)
         headers = Headers({'Cookie': cookie})
         rv = self.app.get('/', headers=headers)
