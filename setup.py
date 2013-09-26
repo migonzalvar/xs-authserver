@@ -14,7 +14,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=requires,
-    scripts=['runserver'],
+    scripts=['authserverctl'],
 
     # meta
     version=__version__,
