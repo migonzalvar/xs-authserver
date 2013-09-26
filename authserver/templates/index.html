@@ -23,6 +23,10 @@
 # this request
 pkey_hash: {{ pkey_hash }}
 user_agent: {{ request.user_agent.string }}
+cookies:
+{% for cookie, payload in request.cookies.iteritems() -%}
+  - {{ cookie }}: {{ payload }}
+{% endfor %}
 </pre>
 
 <pre>
