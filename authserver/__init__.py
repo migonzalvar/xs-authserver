@@ -7,7 +7,6 @@ import uuid
 
 from flask import Flask, request, render_template, g
 
-
 OLPC_XS_DB = '/home/idmgr/identity.db'
 DATABASE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'test.db'))
 
