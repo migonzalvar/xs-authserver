@@ -1,4 +1,23 @@
 #!/usr/bin/env python
 
-from authserver import app
-app.run(host='0.0.0.0', port=5000, debug=True)
+import argparse
+
+import authserver
+
+
+def runserver():
+    authserver.app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+def init_db():
+    authserver.init_db()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="authserver command utility")
+    parser.add_argument('command', choices=['runserver', 'initdb'])
+    args = parser.parse_args()
+    if args.command == 'runserver':
+        runserver()
+    elif args.command == 'initdb':
+        init_db()
