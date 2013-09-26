@@ -18,19 +18,19 @@
 
 import argparse
 
-import authserver
+import xs_authserver
 
 
 def runserver():
-    authserver.app.run(host='0.0.0.0', port=5000, debug=True)
+    xs_authserver.app.run(host='0.0.0.0', port=5000, debug=True)
 
 
 def init_db():
-    authserver.init_db()
+    xs_authserver.init_db()
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="authserver command utility")
+    parser = argparse.ArgumentParser(description="xs-authserver command utility")
     parser.add_argument('command', choices=['runserver', 'initdb'])
     args = parser.parse_args()
     if args.command == 'runserver':

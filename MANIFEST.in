@@ -1,3 +1,3 @@
 include requirements.txt
-include authserver/schema.sql
-recursive-include authserver/templates *
+include xs_authserver/schema.sql
+recursive-include xs_authserver/templates *

@@ -105,7 +105,7 @@ class Idmgr(object):
 
 
 class User(object):
-    """User registered in authserver custom database.
+    """User registered in xs-authserver custom database.
 
     .. code:: sql
 

@@ -6,7 +6,7 @@ import tempfile
 
 from werkzeug.datastructures import Headers
 
-import authserver
+import xs_authserver
 
 
 FIXTURES = {
@@ -48,7 +48,7 @@ INSERT INTO "users" VALUES(
 }
 
 
-class AuthserverTestCase(unittest.TestCase):
+class XSAuthserverTestCase(unittest.TestCase):
     def setUp(self):
         self.db_fds = {}
         for db, sql in FIXTURES.iteritems():
@@ -56,15 +56,15 @@ class AuthserverTestCase(unittest.TestCase):
             conn = sqlite3.connect(filename)
             conn.executescript(sql)
             conn.close()
-            self.db_fds[db], authserver.app.config[db] = fd, filename
-        authserver.app.config['TESTING'] = True
-        self.app = authserver.app.test_client()
+            self.db_fds[db], xs_authserver.app.config[db] = fd, filename
+        xs_authserver.app.config['TESTING'] = True
+        self.app = xs_authserver.app.test_client()
 
     def tearDown(self):
         for fd in self.db_fds.values():
             os.close(fd)
-        os.unlink(authserver.app.config['DATABASE'])
-        os.unlink(authserver.app.config['OLPC_XS_DB'])
+        os.unlink(xs_authserver.app.config['DATABASE'])
+        os.unlink(xs_authserver.app.config['OLPC_XS_DB'])
 
     @staticmethod
     def make_cookie(pkey_hash):

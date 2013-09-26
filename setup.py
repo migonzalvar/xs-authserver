@@ -24,18 +24,18 @@ __version__ = '0.1.1'
 requires = [r.strip() for r in open('requirements.txt') if r]
 
 setup(
-    name='authserver',
-    packages=['authserver'],
+    name='xs-authserver',
+    packages=['xs_authserver'],
     include_package_data=True,
     zip_safe=False,
     install_requires=requires,
-    scripts=['authserverctl'],
+    scripts=['xs-authserverctl'],
 
     # meta
     version=__version__,
     author=u'Miguel González',
     author_email='migonzalvar@activitycentral.com',
-    url='https://github.com/migonzalvar/authserver',
+    url='https://github.com/migonzalvar/xs-authserver',
     license = "GNU GPLv3+",
     classifiers=[
         'Development Status :: 4 - Beta',
