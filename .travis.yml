@@ -4,6 +4,6 @@ python:
 install:
   - "pip install -r requirements.txt --use-mirrors"
   - "pip install --use-mirrors coveralls"
-script: nosetests --with-coverage --cover-package=xs_authserver
+script: coverage run --source=xs_authserver test_xs_authserver.py
 after_success:
     coveralls
