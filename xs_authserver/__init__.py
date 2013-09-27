@@ -24,10 +24,12 @@ import uuid
 
 from flask import Flask, request, render_template, g
 
-_ENV_VAR = 'XS_AUTHSERVER_CONFIG'
-
-OLPC_XS_DB = '/home/idmgr/identity.db'
-DATABASE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'test.db'))
+# Default config
+ENV_PREFIX = 'XS_AUTHSERVER'
+ENV_VARS = {
+    'OLPC_XS_DB': '/home/idmgr/identity.db',
+    'DATABASE': os.path.abspath(os.path.join(os.path.dirname(__file__), 'test.db')),
+}
 
 
 def connect_to_database(database):
@@ -187,8 +189,11 @@ def sync_idmgr():
 
 app = Flask(__name__)
 
-app.config.from_object(__name__)
-app.config.from_envvar(_ENV_VAR, silent=True)
+# Config section
+for var in ENV_VARS:
+    env_var = ENV_PREFIX + '_' + var
+    value = os.environ.get(env_var) or ENV_VARS[var]
+    app.config[var] = value
 
 
 @app.teardown_appcontext
