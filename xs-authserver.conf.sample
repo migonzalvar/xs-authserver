@@ -1,3 +1,0 @@
-# xs-authserver.conf.sample
-OLPC_XS_DB = '/home/idmgr/identity.db'
-DATABASE = '/var/lib/xs-authserver/data.db'
