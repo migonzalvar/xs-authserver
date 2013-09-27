@@ -3,7 +3,7 @@ python:
   - "2.7"
 install:
   - "pip install -r requirements.txt --use-mirrors"
-  - "pip install --use-mirrors coverall"
+  - "pip install --use-mirrors coveralls"
 script: nosetests --with-coverage --cover-package=xs_authserver
 after_success:
     coveralls
