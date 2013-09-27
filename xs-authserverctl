@@ -30,7 +30,13 @@ def init_db():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="xs-authserver command utility")
+    description = "xs-authserver command utility"
+    epilog = (
+     "xs-authserver uses a config file specified by {env} environment "
+     "variable. If {env} is not defined or the filename doesn't exist "
+     "it will use default values."
+        ).format(env=xs_authserver._ENV_VAR)
+    parser = argparse.ArgumentParser(description=description, epilog=epilog)
 
     parser.add_argument('command', choices=['runserver', 'initdb'])
 
