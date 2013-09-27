@@ -6,10 +6,10 @@ xs-authserver
 A component of a School Server like XS_, XSCE_ or DXS_.
 
 **xs-authserver** implements a seamless web authentication service using XO
-laptop registration capabilities.  It is heavily inspired Moodle OLPC-XS
+laptop registration capabilities.  It is heavily inspired by the Moodle OLPC-XS
 authentication plugin.
 
-*Continuos integrations status*
+*Continuous integration status*
 
 .. image:: https://api.travis-ci.org/migonzalvar/xs-authserver.png
     :target: https://travis-ci.org/migonzalvar/xs-authserver
