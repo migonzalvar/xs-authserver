@@ -184,7 +184,6 @@ def sync_idmgr():
 
 
 app = Flask(__name__)
-app.debug = True
 
 app.config.from_object(__name__)
 

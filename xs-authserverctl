@@ -21,8 +21,8 @@ import argparse
 import xs_authserver
 
 
-def runserver():
-    xs_authserver.app.run(host='0.0.0.0', port=5000, debug=True)
+def runserver(debug=False):
+    xs_authserver.app.run(host='0.0.0.0', port=5000, debug=debug)
 
 
 def init_db():
@@ -31,9 +31,16 @@ def init_db():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="xs-authserver command utility")
+
     parser.add_argument('command', choices=['runserver', 'initdb'])
+
+    parser.add_argument('--debug', dest='debug', action='store_true')
+    parser.add_argument('--no-debug', dest='debug', action='store_false')
+    parser.set_defaults(debug=False)
+
     args = parser.parse_args()
+
     if args.command == 'runserver':
-        runserver()
+        runserver(debug=args.debug)
     elif args.command == 'initdb':
         init_db()
