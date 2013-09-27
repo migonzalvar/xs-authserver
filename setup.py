@@ -19,7 +19,7 @@
 from setuptools import setup
 
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 requires = [r.strip() for r in open('requirements.txt') if r]
 
