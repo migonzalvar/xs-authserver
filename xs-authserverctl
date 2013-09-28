@@ -31,11 +31,19 @@ def init_db():
 
 if __name__ == '__main__':
     description = "xs-authserver command utility"
-    epilog = (
-     "xs-authserver uses a config file specified by {env} environment "
-     "variable. If {env} is not defined or the filename doesn't exist "
-     "it will use default values."
-        ).format(env=xs_authserver._ENV_VAR)
+
+    epilog = [
+        "xs-authserver uses environment variables for configuration.  "
+        "If they are not defined it will use default values instead.  "
+    ]
+    for env_var, default in xs_authserver.ENV_VARS.iteritems():
+        msg = "`{env}` default value is '{default}'.  ".format(
+            env=xs_authserver.ENV_PREFIX + "_" + env_var,
+            default=default
+        )
+        epilog.append(msg)
+    epilog = "".join(epilog)
+
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
 
     parser.add_argument('command', choices=['runserver', 'initdb'])
