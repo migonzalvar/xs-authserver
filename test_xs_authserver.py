@@ -67,14 +67,15 @@ class XSAuthserverTestCase(unittest.TestCase):
         os.unlink(xs_authserver.app.config['OLPC_XS_DB'])
 
     @staticmethod
-    def make_cookie(pkey_hash):
-        """Create a the magic XO cookie.
-
-        :rtype : dict
-        """
-        cookie_value = json.dumps(dict(pkey_hash=pkey_hash))
-        cookie = "xoid={cookie_value}".format(cookie_value=cookie_value)
-        return cookie
+    def make_header(pkey_hash=None, extra_headers={}, **kwargs):
+        headers = {}
+        if pkey_hash:
+            cookie_value = json.dumps(dict(pkey_hash=pkey_hash))
+            cookie = "xoid={cookie_value}".format(cookie_value=cookie_value)
+            headers['Cookie'] = cookie
+        headers.update(extra_headers)
+        headers.update(kwargs)
+        return Headers(headers)
 
     def test_unregistered(self):
         rv = self.app.get('/')
@@ -83,23 +84,21 @@ class XSAuthserverTestCase(unittest.TestCase):
 
     def test_registered_with_account(self):
         nickname, pkey_hash = 'fulano', 'bc040eb5294c5fe63f5cfd28d6961c7db6b9a2bc'
-        cookie = self.make_cookie(pkey_hash)
-        headers = Headers({'Cookie': cookie})
+        headers = self.make_header(pkey_hash)
         rv = self.app.get('/', headers=headers)
         assert "Hello {}".format(nickname) in rv.data
         assert "pkey_hash: {}".format(pkey_hash) in rv.data
 
     def test_registered_without_account(self):
         nickname, pkey_hash = 'miguel', '195ed98f4975ebccb1e699d8636278b64e9276b3'
-        cookie = self.make_cookie(pkey_hash)
-        headers = Headers({'Cookie': cookie})
+        headers = self.make_header(pkey_hash)
         rv = self.app.get('/', headers=headers)
         assert "Hello {}".format(nickname) in rv.data
         assert "pkey_hash: {}".format(pkey_hash) in rv.data
 
     def test_user_agent_sugar(self):
         user_agent = r'SugarLabs/0.98'
-        headers = Headers({'User-Agent': user_agent})
+        headers = self.make_header(extra_headers={'User-Agent': user_agent})
         rv = self.app.get('/', headers=headers)
         assert "Detected Sugar platform" in rv.data
 
