@@ -225,8 +225,11 @@ def index():
     context.update(pkey_hash=None, user=None)
     cookie = request.cookies.get('xoid')
     if cookie:
-        # TODO: secure reading cookie
-        xoid = json.loads(cookie)
+        try:
+            xoid = json.loads(cookie)
+        except ValueError:
+            app.logger.warning('xoid cookie is malformed')
+            xoid = {}
         if xoid:
             pkey_hash = xoid.get('pkey_hash')
             if pkey_hash:
