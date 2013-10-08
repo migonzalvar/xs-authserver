@@ -102,6 +102,11 @@ class XSAuthserverTestCase(unittest.TestCase):
         rv = self.app.get('/', headers=headers)
         assert "Detected Sugar platform" in rv.data
 
+    def test_bad_cookie(self):
+        headers = self.make_header(extra_headers={'Cookie': 'xoid=badcookie'})
+        rv = self.app.get('/', headers=headers)
+        assert "Please register your laptop" in rv.data
+        assert "pkey_hash: None" in rv.data
 
 if __name__ == '__main__':
     unittest.main()
