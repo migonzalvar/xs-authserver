@@ -217,6 +217,12 @@ def identify_user_agent(user_agent):
     return {'sugar_platform': platform, 'sugar_version': version}
 
 
+@app.errorhandler(500)
+def internal_error(exception):
+    app.logger.exception(exception)
+    return render_template('500.html'), 500
+
+
 @app.route('/')
 def index():
     context = dict(request=request)
