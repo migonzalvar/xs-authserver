@@ -21,6 +21,8 @@ import os.path
 import re
 import sqlite3
 import uuid
+import sys
+import logging
 
 from flask import Flask, request, render_template, g
 
@@ -197,6 +199,13 @@ for var in ENV_VARS:
     env_var = ENV_PREFIX + '_' + var
     value = os.environ.get(env_var) or ENV_VARS[var]
     app.config[var] = value
+
+if app.debug is not True:
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(logging.WARNING)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    stdout_handler.setFormatter(formatter)
+    app.logger.addHandler(stdout_handler)
 
 
 @app.teardown_appcontext
