@@ -1,10 +1,5 @@
-<!doctype html>
-<html>
-<head>
-  <title>XS authentication server</title>
-</head>
-<body>
-
+{% extends "layout.html" %}
+{% block content %}
 {% if sugar_platform %}
 <p>Detected Sugar platform version {{ sugar_version }}</p>
 {% else %}
@@ -16,25 +11,4 @@
 {% else %}
   <p>Please register your laptop</p>
 {% endif %}
-
-<h2>Log</h2>
-<pre>
-----
-# this request
-pkey_hash: {{ pkey_hash }}
-user_agent: {{ request.user_agent.string }}
-cookies:
-{% for cookie, payload in request.cookies.iteritems() -%}
-  - {{ cookie }}: {{ payload }}
-{% endfor %}
-</pre>
-
-<pre>
----
-# registered users
-{% for ru in registered_users %}
-- {{ ru }}
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+{% block head %}
+  <title>XS authentication server</title>
+{% endblock %}
+</head>
+<body>
+<div id="content">{% block content %}{% endblock %}</div>
+{% block log %}
+<h2>Log</h2>
+<pre>
+----
+# this request
+pkey_hash: {{ pkey_hash }}
+user_agent: {{ request.user_agent.string }}
+cookies:
+{% for cookie, payload in request.cookies.iteritems() -%}
+  - {{ cookie }}: {{ payload }}
+{% endfor %}
+</pre>
+
+<pre>
+---
+# registered users
+{% for ru in registered_users %}
+- {{ ru }}
+{% endfor %}
+{% endblock %}
+</body>
+</html>
