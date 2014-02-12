@@ -108,5 +108,10 @@ class XSAuthserverTestCase(unittest.TestCase):
         assert "Please register your laptop" in rv.data
         assert "pkey_hash: None" in rv.data
 
+    def test_re_init_b(self):
+        # Recreating database doesn't throw an error
+        assert xs_authserver.init_db()
+
+
 if __name__ == '__main__':
     unittest.main()
