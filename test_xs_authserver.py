@@ -32,13 +32,6 @@ INSERT INTO "laptops" VALUES(
 );
 """,
     'DATABASE': """
-CREATE TABLE users (
-    uuid VARCHAR(36) NOT NULL,
-    nickname VARCHAR(200) NOT NULL,
-    pkey_hash VARCHAR(40) NOT NULL,
-    PRIMARY KEY (uuid),
-    UNIQUE (pkey_hash)
-);
 INSERT INTO "users" VALUES(
     '09c131b2-25dd-11e3-89c5-e89a8f08bf39',
     'fulano',
@@ -50,19 +43,20 @@ INSERT INTO "users" VALUES(
 
 class XSAuthserverTestCase(unittest.TestCase):
     def setUp(self):
-        self.db_fds = {}
         for db, sql in FIXTURES.iteritems():
-            fd, filename = tempfile.mkstemp()
-            conn = sqlite3.connect(filename)
+            filename = tempfile.NamedTemporaryFile(delete=False)
+            filename.close()
+            xs_authserver.app.config[db] = filename.name
+            if db == 'DATABASE':
+                xs_authserver.init_db()
+            conn = sqlite3.connect(filename.name)
             conn.executescript(sql)
             conn.close()
-            self.db_fds[db], xs_authserver.app.config[db] = fd, filename
+
         xs_authserver.app.config['TESTING'] = True
         self.app = xs_authserver.app.test_client()
 
     def tearDown(self):
-        for fd in self.db_fds.values():
-            os.close(fd)
         os.unlink(xs_authserver.app.config['DATABASE'])
         os.unlink(xs_authserver.app.config['OLPC_XS_DB'])
 
@@ -107,6 +101,11 @@ class XSAuthserverTestCase(unittest.TestCase):
         rv = self.app.get('/', headers=headers)
         assert "Please register your laptop" in rv.data
         assert "pkey_hash: None" in rv.data
+
+    def test_re_init_b(self):
+        # Recreating database doesn't throw an error
+        assert xs_authserver.init_db()
+
 
 if __name__ == '__main__':
     unittest.main()
