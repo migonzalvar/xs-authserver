@@ -23,6 +23,7 @@ import sqlite3
 import uuid
 import sys
 import logging
+from contextlib import closing
 
 from flask import Flask, request, render_template, g
 
@@ -47,15 +48,15 @@ def get_db():
 
 
 def init_db():
-    try:
-        with app.app_context():
-            db = get_db()
+    with closing(connect_to_database(app.config['DATABASE'])) as db:
+        try:
             with app.open_resource('schema.sql', mode='r') as f:
                 db.cursor().executescript(f.read())
             db.commit()
-            return True
-    except sqlite3.OperationalError as err:
-        return False
+            rv = True
+        except sqlite3.OperationalError:
+            rv = False
+    return rv
 
 def get_olpc_xs_db():
     db = getattr(g, '_olpc_xs_db', None)
